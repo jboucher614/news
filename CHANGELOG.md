@@ -5,7 +5,7 @@ The format is mostly based on [Keep a Changelog](https://keepachangelog.com/en/1
 # Unreleased
 ## [21.x.x]
 ### Changed
-
+- Add a new command for occ ./occ news:updater:job allows to check and reset the update job (#2166)
 ### Fixed
 
 # Releases

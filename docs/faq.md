@@ -44,6 +44,52 @@ Feeds can be updated using Nextcloud's system cron or an [external updater](http
 **The feed update is not run in Webcron and AJAX cron mode!**
 
 ### System Cron
+!!! info
+
+    This requires Nextcloud 26 or newer and News 21.2.x or newer.
+
+Follow this checklist:
+
+- Check admin settings of nextcloud, was the last cron execution ok.
+- Check the News admin settings, system cron is used to update news
+- You should see a info card at the top (Nextcloud 26+) which will tell you when the last job execution was.
+    - If the card is red it is very likely that the update job is stuck.
+    - If it is green then maybe only some feeds are failing to update, check the Nextcloud logs.
+
+If you believe the job is stuck you can reset it. For further steps you need to use occ.
+
+You can check again the status of the job.
+(replace www-data with your httpd user)
+```bash
+sudo -u www-data php ./occ news:updater:job
+Checking update Status
+Last Execution was 2023-03-20 12:20:03 UTC
+```
+
+If you think the job is stuck you can reset it, this may lead to issues if the job is currently running!
+
+```bash
+sudo -u www-data php ./occ news:updater:job --reset
+Checking update Status
+Last Execution was 2023-03-20 12:20:03 UTC
+Attempting to reset the job.
+Done, job should execute on next schedule.
+```
+The output of the command should have changed.
+```bash
+sudo -u www-data php ./occ news:updater:job
+Checking update Status
+Last Execution was 1970-01-01 00:00:00 UTC
+```
+
+After some time has passed the timestamp should be close to the current time.
+
+If this did not help, check the logs and open a issue or discussion on GitHub.
+
+#### Outdated Steps
+
+Follow these steps if you are running an older version of News and Nextcloud.
+
 * Check if you are using the system cron (Cron) setting on the admin page. AJAX and Web cron will not update feeds
 * Check if the cronjob exists with **crontab -u www-data -e** (replace www-data with your httpd user)
 * Check the file permissions of the **cron.php** file and if **www-data** (or whatever your httpd user is called like) can read and execute that script
